@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
+    <!-- 헤더 -->
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">📝 Todo List</h1>
+
+    <!-- 입력 영역 -->
+    <div class="flex gap-2 mb-6">
+      <input
+        id="todoInput"
+        type="text"
+        placeholder="새로운 할 일을 입력하세요..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        onclick="addTodo()"
+        class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
+      >
+        추가
+      </button>
+    </div>
+
+    <!-- 할 일 목록 -->
+    <ul id="todoList" class="space-y-3 max-h-96 overflow-y-auto">
+      <!-- 동적으로 생성됨 -->
+    </ul>
+
+    <!-- 빈 상태 메시지 -->
+    <div id="emptyState" class="text-center text-gray-400 py-8">
+      할 일을 추가해보세요! 🚀
+    </div>
+  </div>
+
+  <script>
+    const todoInput = document.getElementById('todoInput');
+    const todoList = document.getElementById('todoList');
+    const emptyState = document.getElementById('emptyState');
+
+    // 할 일 추가
+    function addTodo() {
+      const text = todoInput.value.trim();
+      if (!text) return;
+
+      // li 요소 생성
+      const li = document.createElement('li');
+      li.className = 'flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition';
+      li.innerHTML = `
+        <input
+          type="checkbox"
+          class="w-5 h-5 text-blue-500 rounded cursor-pointer todo-checkbox"
+          onchange="toggleTodo(this)"
+        />
+        <span class="flex-1 text-gray-800 todo-text">${escapeHtml(text)}</span>
+        <button
+          class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition"
+          onclick="removeTodo(this)"
+        >
+          삭제
+        </button>
+      `;
+
+      todoList.appendChild(li);
+      todoInput.value = '';
+      updateEmptyState();
+    }
+
+    // 할 일 완료/미완료 토글
+    function toggleTodo(checkbox) {
+      const todoText = checkbox.nextElementSibling;
+      if (checkbox.checked) {
+        todoText.classList.add('line-through', 'text-gray-400');
+      } else {
+        todoText.classList.remove('line-through', 'text-gray-400');
+      }
+    }
+
+    // 할 일 삭제
+    function removeTodo(button) {
+      button.closest('li').remove();
+      updateEmptyState();
+    }
+
+    // 빈 상태 표시 업데이트
+    function updateEmptyState() {
+      if (todoList.children.length === 0) {
+        emptyState.style.display = 'block';
+      } else {
+        emptyState.style.display = 'none';
+      }
+    }
+
+    // HTML 특수 문자 이스케이프
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Enter 키로 추가
+    todoInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTodo();
+    });
+  </script>
+</body>
+</html>

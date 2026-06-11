@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open *)",
+      "Bash(python3 -m http.server 8000)",
+      "Bash(curl -s http://localhost:8000/counter.html)",
+      "Bash(cat)",
+      "Bash(python3 /tmp/test_counter.py)",
+      "Bash(node /tmp/test_counter.js)",
+      "Skill(run)"
+    ]
+  },
+  "outputStyle": "Intermediate Developer"
+}
